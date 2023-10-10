@@ -43,8 +43,12 @@ $(function() {
     count_chars('summary');
   }
 
-  $('#helpable-toggle').on('click', function() {
-    $('.helpable .help-block').slideToggle();
+  document.querySelector('#preview')?.insertAdjacentHTML('afterend',  '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
+
+  document.querySelector('#preview')?.insertAdjacentHTML('afterend', '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
+
+  document.querySelector('#helpable-toggle').addEventListener('click', function() {
+    document.querySelectorAll('.helpable .help-block').forEach((el) => el.classList.toggle('is-opening'));
   });
 
   document.querySelector('#preview')?.insertAdjacentHTML('afterend', '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
@@ -54,9 +58,9 @@ $(function() {
   });
 
   // progressively enhance if js is available
-  $('.helpable .help-block').css({ display: "none" });
-  $('#content-html').css({ display: "none" });
-  $('trix-editor').css({ display: "block" });
+  document.querySelectorAll('.helpable .help-block').forEach((el) => el.style.setProperty('display', 'none'))
+  document.querySelector('#content-html')?.style.setProperty('display', 'none');
+  document.querySelector('trix-editor')?.style.setProeprty('display', 'block')
 
   function getLocation(callback) {
     navigator.geolocation.getCurrentPosition(function(position) {
