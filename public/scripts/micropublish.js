@@ -1,22 +1,28 @@
 $(function() {
 
-  $('#preview').on('click', function() {
-    $('#preview-modal').modal();
-    $('#preview-content').html("");
-    $.ajax({
-      data: $('#form').serialize(),
-      type: 'post',
-      url: $('#form').attr('action') + "?_preview=1",
-      success: function(data) {
-        var content = "<pre>" + data + "</pre>";
-        $('#preview-content').html(content);
-      },
-      error: function(xhr, desc, error) {
-        var content = "<div class=\"alert alert-danger\">" + xhr.responseText +
-          "</div>"
-        $('#preview-content').html(content);
+  document.querySelector('#preview')?.addEventListener('click', (event) => {
+    event.preventDefault()
+    const form = event.currentTarget.form
+    if (form.checkValidity() === false) return
+    document.querySelector('#preview-modal').showModal()
+
+    const content = document.querySelector('#preview-content')
+    content.innerHTML = ''
+
+    fetch(`${form.action}?_preview=1`, {
+      method: "POST",
+      body: new URLSearchParams(new FormData(form)),
+      headers: {
+        'X-REQUESTED-WITH': 'XMLHttpRequest'
       }
-    });
+    })
+    .then((response) => response.text())
+    .then((body) => {
+      content.insertAdjacentHTML('afterbegin', `<pre>${body}</pre>`)
+    })
+    .catch((err) => {
+      debugger
+    })
     return false
   });
 
@@ -40,6 +46,8 @@ $(function() {
   $('#helpable-toggle').on('click', function() {
     $('.helpable .help-block').slideToggle();
   });
+
+  document.querySelector('#preview')?.insertAdjacentHTML('afterend', '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
 
   $('#settings-format-form input').on('click', function() {
     $('#settings-format-form').submit();
