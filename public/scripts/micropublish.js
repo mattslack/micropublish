@@ -1,4 +1,4 @@
-$(function() {
+(() => {
 
   document.querySelector('#preview')?.addEventListener('click', (event) => {
     event.preventDefault()
@@ -24,45 +24,51 @@ $(function() {
       debugger
     })
     return false
-  });
+  })
 
-  function count_chars(id) {
-     $('#' + id + '_count').html(
-       "<span class=\"fa fa-twitter\"></span> " +
-       twttr.txt.getTweetLength(
-         $('#' + id).val()
-       )
-     );
-  }
-  if ($('#content_count').length) {
-    $('#content').on('change keyup', function() { count_chars('content'); });
-    count_chars('content');
-  }
-  if ($('#summary_count').length) {
-    $('#summary').on('change keyup', function() { count_chars('summary'); });
-    count_chars('summary');
+  const count_chars = (id) => {
+    const el = document.querySelector(`#${id}`)
+    document.querySelector(`#${id}_count`).innerHTML = `<svg><use href="/images/sprite.svg#icon_twitter"></use></svg>${twttr.txt.getTweetLength(el.value)}`
   }
 
-  document.querySelector('#preview')?.insertAdjacentHTML('afterend',  '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
+  if (document.querySelector('#content_count')) {
+    const content = document.querySelector('#content')
+    content.addEventListener('change', () => count_chars('content'))
+    content.addEventListener('keyup', () => count_chars('content'))
+    count_chars('content')
+  }
+
+  if (document.querySelector('#summary_count')) {
+    const summary = document.querySelector('#summary')
+    summary.addEventListener('change', () => count_chars('summary'))
+    summary.addEventListener('keyup', () => count_chars('summary'))
+    count_chars('summary')
+  }
 
   document.querySelector('#preview')?.insertAdjacentHTML('afterend', '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
 
-  document.querySelector('#helpable-toggle').addEventListener('click', function() {
-    document.querySelectorAll('.helpable .help-block').forEach((el) => el.classList.toggle('is-opening'));
-  });
+  document.querySelector('#helpable-toggle')?.addEventListener('click', () => {
+    document.querySelectorAll('.helpable .help-block').forEach((el) => {
+      const display = el.style.getPropertyValue('display')
 
-  document.querySelector('#preview')?.insertAdjacentHTML('afterend', '<button type="button" class="btn" id="helpable-toggle" data-toggle="button" aria-pressed="false">Help</button>');
+      if (display.length && display !== 'none') {
+        el.style.removeProperty('display')
+      } else {
+        el.style.setProperty('display', 'block')
+      }
+    })
+  })
 
-  $('#settings-format-form input').on('click', function() {
-    $('#settings-format-form').submit();
-  });
+  document.querySelector('#settings-format-form')?.addEventListener('change', () => {
+    document.querySelector('#settings-format-form').submit()
+  })
 
   // progressively enhance if js is available
   document.querySelectorAll('.helpable .help-block').forEach((el) => el.style.setProperty('display', 'none'))
-  document.querySelector('#content-html')?.style.setProperty('display', 'none');
-  document.querySelector('trix-editor')?.style.setProeprty('display', 'block')
+  document.querySelector('#content-html')?.style.setProperty('display', 'none')
+  document.querySelector('trix-editor')?.style.setProperty('display', 'block')
 
-  function getLocation(callback) {
+  const getLocation = (callback) => {
     navigator.geolocation.getCurrentPosition(function(position) {
       var latitude = (Math.round(position.coords.latitude * 100000) / 100000);
       var longitude = (Math.round(position.coords.longitude * 100000) / 100000);
@@ -81,32 +87,32 @@ $(function() {
     })
   }
 
-  $('#find_location').on('click', function() {
-    getLocation(function (latitude, longitude) {
-      $("#latitude").val(latitude);
-      $("#longitude").val(longitude);
-    })
+  document.querySelector('#find_location')?.addEventListener('click', () => {
+    const callback = (latitude, longitude) => {
+      document.querySelector('#latitude').value = latitude
+      document.querySelector('#longitude').value = longitude
+    }
+    getLocation(callback)
     return false
-  });
+  })
 
-  if ($('#auto_location').length) {
-    function getAutoLocation () {
+  if (document.querySelector('#auto_location') !== null) {
+    const getAutoLocation = () => {
       return localStorage.getItem('autoLocation') === 'true'
     }
 
-    function fillLocation() {
-      if (!getAutoLocation()) {
-        return
-      }
+    const fillLocation = () => {
+      if (!getAutoLocation()) return
 
-      getLocation(function(latitude, longitude, accuracy) {
-        $('#location').val(`geo:${latitude},${longitude};u=${accuracy}`)
-      })
+      const callback = (latitude, longitude, accuracy) => {
+        document.querySelector('#location').value = `geo:${latitude},${longitude};u=${accuracy}`
+      }
+      getLocation(callback)
     }
 
-    $('#auto_location').prop('checked', getAutoLocation())
+    document.querySelector('#auto_location').checked = getAutoLocation()
 
-    $('#auto_location').on('change', function(event) {
+    document.querySelector('#auto_location').addEventListener('change', (event) => {
       localStorage.setItem('autoLocation', event.target.checked)
       fillLocation()
     })
@@ -114,47 +120,46 @@ $(function() {
     fillLocation()
   }
 
-  $('#upload_photo').on('click', function() {
-    $('#photo_file').click();
-    return false;
-  });
+  document.querySelector('#upload_photo')?.addEventListener('click', () => {
+    document.querySelector('#photo_file')?.dispatchEvent(new Event('click'))
+    return false
+  })
 
-  $('#photo_file').on('change', function(event) {
-    var fd = new FormData();
-    var files = event.target.files[0];
-    fd.append('file', files);
+  document.querySelector('#photo_file')?.addEventListener('change', (event) => {
+    const body = new FormData()
+    const files = event.target.files[0]
+    body.append('file', files)
 
-    $.ajax({
-      url: '/media',
-      type: 'post',
-      data: fd,
-      contentType: false,
-      processData: false,
-      success: function(response){
-        var val = $('#photo').val() + '\n' + response;
-        val = val.trim();
-        $('#photo').val(val);
-        $('#photo').attr('rows', val.split('\n').length || 1);
-      },
-      error: function(xhr, desc, error) {
-        alert(xhr.responseText);
+    fetch('/media', {
+      method: 'POST',
+      body
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.text()
+      } else {
+        alert(response.statusText)
       }
-    });
-  });
-});
+    })
+    .then((response) => {
+      const photo = document.querySelector('#photo')
+      let val = photo.value + '\n' + response
+      val = val.trim();
+      photo.value = value
+      photo.setAttribute('rows', value.split('\n').length || 1)
+    })
+  })
+})();
 
-$.fn.countdown = function(duration) {
-  var container = $(this[0]);
-  var countdown = setInterval(function() {
+const countdown = (el, duration) => {
+  const countdown = setInterval(() => {
     if (--duration) {
-      container.html(
-        "Redirecting in " + duration + " second" + (duration != 1 ? "s" : "")
-      );
+      el.innerHTML `Redirecting in ${duration} second ${(duration != 1 ? 's' : '')}`
     } else {
-      container.html("Redirecting&hellip;");
-      clearInterval(countdown);
-      document.location = document.location;
+      el.innerHTML = 'Redirecting…'
+      clearInterval(countdown)
+      document.location = document.location
     }
-  }, 1000);
+  }, 1000)
 }
 

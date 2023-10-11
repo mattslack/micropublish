@@ -20,7 +20,7 @@
 </div>
 
 <script>
-  $(function() {
-    $('#countdown').countdown(3);
-  });
+  (() => {
+    countdown(document.querySelector('#countdown'), 3)
+  })()
 </script>
