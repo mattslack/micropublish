@@ -3,7 +3,7 @@
   <input type="hidden" name="_subtype" value="<%= @subtype %>">
   <% if @all %><input type="hidden" name="_all" value=""><% end %>
 
-  <div class="panel panel-default">
+  <div class="panel">
 
     <div class="panel-heading">
       <h3 class="panel-title">
@@ -166,7 +166,7 @@
 
             <% if @media %>
               <input type="file" id="photo_file" name="file" style="display: none;" />
-              <button type="button" class="btn btn-default" style="margin-top: 5px;" id="upload_photo" data-toggle="button" aria-pressed="false" autocomplete="off">Upload</button>
+              <button type="button" class="btn" style="margin-top: 5px;" id="upload_photo" data-toggle="button" aria-pressed="false" autocomplete="off">Upload</button>
             <% end %>
 
           <p class="help-block">
@@ -228,25 +228,28 @@
         </div>
         <div class="form-group">
           <div class="form-inline">
-            <label>
-              Latitude
-              <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
-            </label>
-            <input type="text" class="form-control" name="checkin[][properties][latitude][]"
-              id="latitude" pattern="-?\d{1,3}\.\d+"
-              <% if @required.include?('checkin') %>required<% end %>
-              value="<%= h @post.properties['checkin'][0]['properties']['latitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
-            &nbsp;
-            <label>
-              Longitude
-              <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
-            </label>
-            <input type="text" class="form-control" name="checkin[][properties][longitude][]"
-              id="longitude" pattern="-?\d{1,3}\.\d+"
-              <% if @required.include?('checkin') %>required<% end %>
-              value="<%= h @post.properties['checkin'][0]['properties']['longitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
+            <div class="form-group">
+              <label>
+                Latitude
+                <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
+              </label>
+              <input type="text" class="form-control" name="checkin[][properties][latitude][]"
+                id="latitude" pattern="-?\d{1,3}\.\d+"
+                <% if @required.include?('checkin') %>required<% end %>
+                value="<%= h @post.properties['checkin'][0]['properties']['latitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
+            </div>
+            <div class="form-group">
+              <label>
+                Longitude
+                <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
+              </label>
+              <input type="text" class="form-control" name="checkin[][properties][longitude][]"
+                id="longitude" pattern="-?\d{1,3}\.\d+"
+                <% if @required.include?('checkin') %>required<% end %>
+                value="<%= h @post.properties['checkin'][0]['properties']['longitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
+              </div>
             <script>
-              document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
+              document.write("<div class=\"form-group\"><button type=\"button\" class=\"btn\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button></div>");
             </script>
           </div>
           <p class="help-block">
@@ -450,30 +453,32 @@
         </div>
       <% end %>
 
-      <div class="form-group">
-        <label for="mp-syndicate-to">
-          Syndicate To
-          <% if @required.include?('mp-syndicate-to') %><span class="required" title="required">*</span><% end %>
-        </label>
-        <br>
-        <% syndicate_to(@subtype).each do |syndication| %>
-          <label class="checkbox-inline">
-            <input type="checkbox" name="mp-syndicate-to[]" id="mp-syndicate-to" value="<%= h syndication['uid'] %>"
-              <% if (!@edit && request.get? && syndication.key?('checked') && syndication['checked']) ||
-                (@post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid'])) %>
-                checked
-              <% end %>
-            ><%= h syndication['name'] %>
+      <% if syndicate_to(@subtype).any? %>
+        <div class="form-group">
+          <label for="mp-syndicate-to">
+            Syndicate To
+            <% if @required.include?('mp-syndicate-to') %><span class="required" title="required">*</span><% end %>
           </label>
-        <% end %>
-        <p class="help-block">
-          Choose a service to syndicate to from your endpoint's
-          <em>syndicate-to</em> list. If your services do not appear here then
-          please <a href="/about#configuration">read the docs</a> to ensure
-          you are using the correct format.
-          <code>mp-syndicate-to[]</code>
-        </p>
-      </div>
+          <br>
+          <% syndicate_to(@subtype).each do |syndication| %>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="mp-syndicate-to[]" id="mp-syndicate-to" value="<%= h syndication['uid'] %>"
+                <% if (!@edit && request.get? && syndication.key?('checked') && syndication['checked']) ||
+                  (@post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid'])) %>
+                  checked
+                <% end %>
+              ><%= h syndication['name'] %>
+            </label>
+          <% end %>
+          <p class="help-block">
+            Choose a service to syndicate to from your endpoint's
+            <em>syndicate-to</em> list. If your services do not appear here then
+            please <a href="/about#configuration">read the docs</a> to ensure
+            you are using the correct format.
+            <code>mp-syndicate-to[]</code>
+          </p>
+        </div>
+      <% end %>
 
       <% if !@edit %>
         <div class="form-group">
@@ -564,11 +569,8 @@
       <button type="submit" class="btn btn-primary">
         <%= @action_label %>
       </button>
-      <button type="submit" name="_preview" class="btn btn-default"
+      <button type="submit" name="_preview" class="btn"
         id="preview">Preview</button>
-      <script>
-        document.write("<button type=\"button\" class=\"btn btn-default\" id=\"helpable-toggle\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Help</button>");
-      </script>
     </div>
 
   </div>

@@ -22,46 +22,37 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-default">
-      <div class="container">
-        <div class="navbar-header h-app">
-          <a class="navbar-brand p-name" href="/">
-            Micropublish
-          </a>
-        </div>
-      </div>
-    </nav>
+    <header>
+      <h1 class="container h-app">
+        <a class="p-name" href="/">
+          Micropublish
+        </a>
+      </h1>
+    </header>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
+    <main class="container">
 <%= flash_message %>
 <%= yield %>
-        </div>
-      </div>
-    </div>
+    </main>
 
-    <hr>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <% if logged_in? %>
-            <form action="/logout" method="post" class="form-inline logout">
-              <p>
-                <code><%= session[:me] %></code>&nbsp;
-                <code title="scope"><%= session[:scope] %></code>&nbsp;
-                <button class="btn btn-default btn-xs" type="submit">
-                  Sign out
-                </button>
-              </p>
-            </form>
-          <% end %>
-          <a href="/about">About</a>
-          &middot;
-          <a href="/changelog">Changelog</a>
-        </div>
+    <footer>
+      <div class="container">
+        <% if logged_in? %>
+          <form action="/logout" method="post" class="form-inline logout">
+            <p>
+              <code><%= session[:me] %></code>&nbsp;
+              <code title="scope"><%= session[:scope] %></code>&nbsp;
+              <button class="btn btn-xs" type="submit">
+                Sign out
+              </button>
+            </p>
+          </form>
+        <% end %>
+        <a href="/about">About</a>
+        &middot;
+        <a href="/changelog">Changelog</a>
       </div>
-    </div>
+    </footer>
 
     <script src="/scripts/twitter-text.js"></script>
     <script src="/scripts/jquery.ns-autogrow.min.js"></script>
