@@ -3,22 +3,20 @@
     <h2 class="panel-title">Create a new post</h2>
   </div>
   <div class="panel-body new-buttons">
-    <div>
-      <% @types.keys.each do |type| %>
-        <a class="btn btn-default"
-            <% if type == 'checkin' && default_format != :json %>
-              disabled
-              title="Check-ins are only supported using JSON format."
-              href="#"
-            <% else %>
-              href="/new/h-entry/<%= type %>"
-            <% end %>
-            role="button">
-          <span class="fa fa-<%= @types[type]['icon'] %>"></span><br>
-          <%= @types[type]['name']%>
-        </a>
-      <% end %>
-    </div>
+    <% @types.keys.each do |type| %>
+      <a class="btn"
+          <% if type == 'checkin' && default_format != :json %>
+            disabled
+            title="Check-ins are only supported using JSON format."
+            href="#"
+          <% else %>
+            href="/new/h-entry/<%= type %>"
+          <% end %>
+          role="button">
+          <svg><use href="/images/sprite.svg#icon_<%= @types[type]['icon'] %>"></use></svg>
+        <%= @types[type]['name']%>
+      </a>
+    <% end %>
   </div>
   <div class="panel-footer">
     <form action="/settings" method="post" id="settings-format-form">

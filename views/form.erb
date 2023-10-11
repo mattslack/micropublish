@@ -10,7 +10,7 @@
         <% if @all %>
           All fields
         <% else %>
-          <span class="fa fa-<%= @subtype_icon %>"></span>
+          <svg><use href="/images/sprite.svg#icon_<%= @subtype_icon %>"></use></svg>
         <% end %>
         <%= @subtype_label || "" %>
       </h3>
