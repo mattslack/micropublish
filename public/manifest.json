@@ -1,5 +1,7 @@
 {
   "name": "Micropublish",
   "short_name": "Micropublish",
-  "description": "Micropublish is a Micropub client that you can use to create, update, delete and undelete content on your Micropub-enabled site."
+  "description": "Micropublish is a Micropub client that you can use to create, update, delete and undelete content on your Micropub-enabled site.",
+  "display": "standalone",
+  "start_url": "/?pwa"
 }
