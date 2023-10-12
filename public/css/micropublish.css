@@ -318,6 +318,16 @@ dialog {
   border-left: none;
   border-top-left-radius: 0;
 }
+label.checkbox {
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 0.5rem;
+  justify-content: start;
+}
+label.checkbox + label.checkbox {
+  margin-top: 1rem;
+}
 .container {
   margin: 0 auto;
   max-width: 1170px;
@@ -375,6 +385,17 @@ textarea.form-control {
   color: var(--gray-8);
 }
 
+.lead {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.4;
+}
+@media (min-width: 48rem) {
+  .lead {
+    font-size: 1.25rem;
+  }
+}
 .modal-body {
   padding: 15px;
   position: relative;
