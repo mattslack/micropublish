@@ -290,7 +290,7 @@
               <strong>Text</strong>
             <% end %>
             <div style="float: right;">
-              <span class="badge" id="content_count"></span>
+              <span class="badge"><svg><use href="/images/sprite.svg#icon_twitter"></use></svg><span id="content_count"></span></span>
             </div>
             <textarea class="form-control" rows="5" name="content" id="content"
               <% if @required.include?('content') %>required<% end %>
@@ -342,7 +342,7 @@
             <% if @required.include?('summary') %><span class="required" title="required">*</span><% end %>
           </label>
           <div style="float: right;">
-            <span class="badge" id="summary_count"></span>
+            <span class="badge"><svg><use href="/images/sprite.svg#icon_twitter"></use></svg><span id="summary_count"></span></span>
           </div>
           <textarea class="form-control" rows="2" name="summary" id="summary"
             <% if @required.include?('summary') %>required<% end %>

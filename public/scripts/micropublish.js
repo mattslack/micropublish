@@ -28,7 +28,7 @@
 
   const count_chars = (id) => {
     const el = document.querySelector(`#${id}`)
-    document.querySelector(`#${id}_count`).innerHTML = `<svg><use href="/images/sprite.svg#icon_twitter"></use></svg>${twttr.txt.getTweetLength(el.value)}`
+    document.querySelector(`#${id}_count`).textContent = twttr.txt.getTweetLength(el.value)
   }
 
   if (document.querySelector('#content_count')) {
