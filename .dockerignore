@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**/.DS_Store
+**/.env
+**/.bundle
+**/vendor/bundle
+**/TODO.md
+fly.toml
